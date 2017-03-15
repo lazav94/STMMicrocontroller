@@ -1,0 +1,67 @@
+main
+	__CC2DW
+	__FillZeros
+	init_all
+		init_Lcd
+			lcd_gpio_init
+			lcd_Control_Write
+				clear_lcd_rs
+				lcd_data_line_write
+					set_lcd_en
+					set_lcd_d7
+					clear_lcd_d7
+					set_lcd_d6
+					clear_lcd_d6
+					set_lcd_d5
+					clear_lcd_d5
+					set_lcd_d4
+					clear_lcd_d4
+					clear_lcd_en
+		init_Timer2
+			NVIC_IntEnable
+		init_Buttons
+			NVIC_IntEnable
+		init_LEDs
+		init_UART
+			NVIC_IntEnable
+			init_UART_pins
+	welcome
+		LCD_CLEAR_SCREEN
+			lcd_Control_Write
+		LCD_CURSOR
+			lcd_Control_Write
+		LCD_CURSOR_ONN
+			lcd_Control_Write
+	doSomething
+UART_Interrupt
+	LCD_CLEAR_SCREEN
+	LCD_PRINT_CHAR
+		LCD_CURSOR
+		lcd_Data_Write
+			set_lcd_rs
+			lcd_data_line_write
+	LCD_PRINT_STRING
+		lcd_Data_Write
+	convert
+		charToInt
+		strcpy
+Timer2_Interrupt
+	LCD_PRINT_STRING
+Button1_Interrupt
+	LCD_CLEAR_SCREEN
+	fnc
+		LCD_PRINT_CHAR
+		translate
+			findLetter
+				strcmp
+			LCD_PRINT_STRING
+			strcpy
+			intToChar
+			LCD_PRINT_CHAR
+			SendCharInterrupt
+			clearLetter
+	LCD_PRINT_STRING
+Button2_Interrupt
+	LCD_CLEAR_SCREEN
+	translate
+	LCD_PRINT_STRING
