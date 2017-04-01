@@ -11,3 +11,14 @@ void init_Timer2(){
     TIM2_CR1    |=  (1UL << 0);     // Counter enable    [TIM2_CR1 bit 0]       TIM2_CR1.CEN = 1;
 
 }
+
+void enter_sleep(){
+    // PWR_CR
+    // Bit 2 CWUF: Clear wakeup flag   -1: Clear the WUF Wakeup Flag after 2 System clock cycles
+   //Bit 1 PDDS: Power-down deepsleep - 1: Enter Standby mode when the CPU enters deepsleep.
+/*Bit 0 LPDS: Low-power deepsleep
+This bit is set and cleared by software. It works together with the PDDS bit.
+0: Voltage regulator on during Stop mode
+1: Voltage regulator in low-power mode during Stop mode     */
+//The SLEEPDEEP bit of the SCR selects which sleep mode is used  
+ }

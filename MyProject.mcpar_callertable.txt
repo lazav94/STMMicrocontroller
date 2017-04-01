@@ -4,6 +4,7 @@ main
 	init_all
 		init_Lcd
 			lcd_gpio_init
+				init_GPIO_Pin
 			lcd_Control_Write
 				clear_lcd_rs
 				lcd_data_line_write
@@ -21,22 +22,20 @@ main
 			NVIC_IntEnable
 		init_Buttons
 			NVIC_IntEnable
+			init_GPIO_Pin
 		init_LEDs
+			init_GPIO_Pin
 		init_UART
 			NVIC_IntEnable
 			init_UART_pins
-	welcome
-		LCD_CLEAR_SCREEN
-			lcd_Control_Write
-		LCD_CURSOR
-			lcd_Control_Write
-		LCD_CURSOR_ONN
-			lcd_Control_Write
+				init_GPIO_Pin
 	doSomething
 UART_Interrupt
 	LCD_CLEAR_SCREEN
+		lcd_Control_Write
 	LCD_PRINT_CHAR
 		LCD_CURSOR
+			lcd_Control_Write
 		lcd_Data_Write
 			set_lcd_rs
 			lcd_data_line_write

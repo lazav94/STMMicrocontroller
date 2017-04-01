@@ -4,26 +4,66 @@ volatile unsigned int cursor_pos = 0;
 volatile unsigned char screen_space = 0;
 
 
-void set_lcd_en()  { GPIOC_ODR |= (1UL << 13); }
-void clear_lcd_en(){ GPIOC_ODR &=~(1UL << 13); }
+void set_lcd_en()  { GPIOC_ODR |=  (1UL << LCD_EN_PIN); }
+void clear_lcd_en(){ GPIOC_ODR &= ~(1UL << LCD_EN_PIN); }
 
-void set_lcd_rs()  { GPIOC_ODR |= (1UL <<  4); }
-void clear_lcd_rs(){ GPIOC_ODR &=~(1UL <<  4); }
+void set_lcd_rs()  { GPIOC_ODR |=  (1UL << LCD_RS_PIN); }
+void clear_lcd_rs(){ GPIOC_ODR &= ~(1UL << LCD_RS_PIN); }
 
-void set_lcd_d4()  { GPIOC_ODR |= (1UL <<  3); }
-void clear_lcd_d4(){ GPIOC_ODR &=~(1UL <<  3); }
+void set_lcd_d4()  { GPIOC_ODR |=  (1UL << LCD_D4_PIN); }
+void clear_lcd_d4(){ GPIOC_ODR &= ~(1UL << LCD_D4_PIN); }
 
-void set_lcd_d5()  { GPIOC_ODR |= (1UL <<  2); }
-void clear_lcd_d5(){ GPIOC_ODR &=~(1UL <<  2); }
+void set_lcd_d5()  { GPIOC_ODR |=  (1UL << LCD_D5_PIN); }
+void clear_lcd_d5(){ GPIOC_ODR &= ~(1UL << LCD_D5_PIN); }
 
-void set_lcd_d6()  { GPIOC_ODR |= (1UL <<  1); }
-void clear_lcd_d6(){ GPIOC_ODR &=~(1UL <<  1); }
+void set_lcd_d6()  { GPIOC_ODR |=  (1UL << LCD_D6_PIN); }
+void clear_lcd_d6(){ GPIOC_ODR &= ~(1UL << LCD_D6_PIN); }
 
-void set_lcd_d7()  { GPIOC_ODR |=  (1UL << 0); }
-void clear_lcd_d7(){ GPIOC_ODR &= ~(1UL << 0); }
-
+void set_lcd_d7()  { GPIOC_ODR |=  (1UL << LCD_D7_PIN); }
+void clear_lcd_d7(){ GPIOC_ODR &= ~(1UL << LCD_D7_PIN); }
 
 void lcd_gpio_init(){
+    // Enable GPIOC clock
+    RCC_AHB1ENR    |= (1UL << 2) ;
+
+
+    //int init_GPIO_Pin(unsigned long type, unsigned long port, unsigned long no, unsigned long val)
+    init_GPIO_Pin(MODER,   LCD_EN_PORT, LCD_EN_PIN  ,OUTPUT);
+    init_GPIO_Pin(MODER,   LCD_RS_PORT, LCD_RS_PIN  ,OUTPUT);
+    init_GPIO_Pin(MODER,   LCD_D4_PORT, LCD_D4_PIN  ,OUTPUT);
+    init_GPIO_Pin(MODER,   LCD_D5_PORT, LCD_D5_PIN  ,OUTPUT);
+    init_GPIO_Pin(MODER,   LCD_D6_PORT, LCD_D6_PIN  ,OUTPUT);
+    init_GPIO_Pin(MODER,   LCD_D7_PORT, LCD_D7_PIN  ,OUTPUT);
+
+
+    // Set no push-pull (reset state) on zero for ports C0 C1 C2 C3 C4 C13
+    init_GPIO_Pin(OTYPER,  LCD_EN_PORT, LCD_EN_PIN  ,PUSH_PULL);
+    init_GPIO_Pin(OTYPER,  LCD_RS_PORT, LCD_RS_PIN  ,PUSH_PULL);
+    init_GPIO_Pin(OTYPER,  LCD_D4_PORT, LCD_D4_PIN  ,PUSH_PULL);
+    init_GPIO_Pin(OTYPER,  LCD_D5_PORT, LCD_D5_PIN  ,PUSH_PULL);
+    init_GPIO_Pin(OTYPER,  LCD_D6_PORT, LCD_D6_PIN  ,PUSH_PULL);
+    init_GPIO_Pin(OTYPER,  LCD_D7_PORT, LCD_D7_PIN  ,PUSH_PULL);
+    
+
+    // Clear bits OSEED registar for ports  C0 C1 C2 C3 C4 C13
+    init_GPIO_Pin(OSPEEDR, LCD_EN_PORT, LCD_EN_PIN  ,HIGH);
+    init_GPIO_Pin(OSPEEDR, LCD_RS_PORT, LCD_RS_PIN  ,HIGH);
+    init_GPIO_Pin(OSPEEDR, LCD_D4_PORT, LCD_D4_PIN  ,HIGH);
+    init_GPIO_Pin(OSPEEDR, LCD_D5_PORT, LCD_D5_PIN  ,HIGH);
+    init_GPIO_Pin(OSPEEDR, LCD_D6_PORT, LCD_D6_PIN  ,HIGH);
+    init_GPIO_Pin(OSPEEDR, LCD_D7_PORT, LCD_D7_PIN  ,HIGH);
+    
+    // Clear bits PUPD registar for ports  C0 C1 C2 C3 C4 C13 - NO PULL (00b = 0)
+    init_GPIO_Pin(PUPDR,   LCD_EN_PORT, LCD_EN_PIN  ,NO_PULL_PUSH);
+    init_GPIO_Pin(PUPDR,   LCD_RS_PORT, LCD_RS_PIN  ,NO_PULL_PUSH);
+    init_GPIO_Pin(PUPDR,   LCD_D4_PORT, LCD_D4_PIN  ,NO_PULL_PUSH);
+    init_GPIO_Pin(PUPDR,   LCD_D5_PORT, LCD_D5_PIN  ,NO_PULL_PUSH);
+    init_GPIO_Pin(PUPDR,   LCD_D6_PORT, LCD_D6_PIN  ,NO_PULL_PUSH);
+    init_GPIO_Pin(PUPDR,   LCD_D7_PORT, LCD_D7_PIN  ,NO_PULL_PUSH);
+
+
+}
+void lcd_gpio_init_2(){
 
     // Enable GPIOC clock
     RCC_AHB1ENR    |= (1UL << 2) ;
@@ -129,7 +169,7 @@ void init_Lcd(){
 
     Delay_us(20);
 
-    lcd_Control_Write(LCD_DISP_INIT);    // 0x28  Start to set LCD function
+    lcd_Control_Write(LCD_DISP_INIT);     // 0x28  Start to set LCD function
     Delay_us(20);
 
     lcd_Control_Write(LCD_DISP_OFF);

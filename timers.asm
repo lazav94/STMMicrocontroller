@@ -60,3 +60,9 @@ LDR	LR, [SP, #0]
 ADD	SP, SP, #4
 BX	LR
 ; end of _init_Timer2
+_enter_sleep:
+;timers.c,15 :: 		void enter_sleep(){
+;timers.c,24 :: 		}
+L_end_enter_sleep:
+BX	LR
+; end of _enter_sleep

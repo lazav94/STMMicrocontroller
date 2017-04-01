@@ -1,15 +1,14 @@
-
 #include "uart.h"
 #include "lcd.h"
 #include "led.h"
 
-extern volatile char uart_rd;
-extern volatile char uart_tr;
 
 // LEDs
 volatile sbit LED_1 at GPIOE_ODR.B12;
 volatile sbit LED_2 at GPIOE_ODR.B15;
 
+extern volatile char uart_rd;
+extern volatile char uart_tr;
 
 // Variables and Buffers for UART
 extern volatile char letter[6] ;
@@ -19,7 +18,34 @@ extern volatile unsigned int letters_cnt;
 extern volatile char word[50] ;
 
 
-void init_UART_pins(){
+ void init_UART_pins(){
+
+
+    RCC_AHB1ENR    |=  ((1UL << 0));      // Enable clock for port A
+    RCC_APB1ENR    |=   (1UL << 19);      // Enable UART4 Clock
+    
+    init_GPIO_Pin(MODER,   UART4_TX_PORT, UART4_TX_PIN, ALTERNATIVE_FUNCTION);
+    init_GPIO_Pin(MODER,   UART4_RX_PORT, UART4_RX_PIN, ALTERNATIVE_FUNCTION);
+    
+    init_GPIO_Pin(OTYPER,  UART4_TX_PORT, UART4_TX_PIN, PUSH_PULL);
+    init_GPIO_Pin(OTYPER,  UART4_RX_PORT, UART4_RX_PIN, PUSH_PULL);
+    
+    init_GPIO_Pin(OSPEEDR, UART4_TX_PORT, UART4_TX_PIN, HIGH);
+    init_GPIO_Pin(OSPEEDR, UART4_RX_PORT, UART4_RX_PIN, HIGH);
+    
+    init_GPIO_Pin(PUPDR, UART4_TX_PORT, UART4_TX_PIN, PULL_UP);
+    init_GPIO_Pin(PUPDR, UART4_RX_PORT, UART4_RX_PIN, PULL_UP);
+
+
+
+    GPIOA_AFRL     &= ~(15UL << 0);       // Clear Alternative Function
+    GPIOA_AFRL     &= ~(15UL << 4);       // Clear Alternative Function
+    GPIOA_AFRL     |=  (8UL << 0);        // Set Alternative Function 8 (low registar)
+    GPIOA_AFRL     |=  (8UL << 4);        // Set Alternative Function 8 (low registar)
+
+}
+
+void init_UART_pins_2(){
 
 
     RCC_AHB1ENR    |=  ((1UL << 0));      // Enable clock for port A
@@ -77,7 +103,7 @@ void init_UART(){
     UART4_CR1    |= (1UL << 5);           // RXE interrupt enable - interrupt is generated whenever ORE=1 or RXNE=1 in the USART_SR register
 
 
-    NVIC_IntEnable(IVT_INT_UART4);
+    NVIC_IntEnable(IVT_INT_UART4);        // TODO change this!
 
     UART4_CR1 |= (1UL << 13);             // Enable UART
 }
@@ -98,8 +124,6 @@ void SendStringInterrupt(char *s){
         s++;
     }
 }
-
-
 
 
 int charToInt(char c){

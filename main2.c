@@ -1,27 +1,8 @@
-#include "led.h"
+volatile sbit LED_1 at GPIOE_ODR.B12;
+volatile sbit LED_2 at GPIOE_ODR.B15;
 
-                                                                                                                                  // GPIO: PE12(left), PE15(right)
-
-
+                                                                                                                               // GPIO: PE12(left), PE15(right)
 void init_LEDs(){
-    RCC_AHB1ENR    |= (1UL << 4);      // Enable GPIOD clock
-    
-    
-    init_GPIO_Pin(MODER,   LEFT_LED_PORT,  LEFT_LED_PIN,  OUTPUT);
-    init_GPIO_Pin(OTYPER,  LEFT_LED_PORT,  LEFT_LED_PIN,  PUSH_PULL);
-    init_GPIO_Pin(OSPEEDR, LEFT_LED_PORT,  LEFT_LED_PIN,  HIGH);
-    init_GPIO_Pin(PUPDR,   LEFT_LED_PORT,  LEFT_LED_PIN,  PULL_UP);
-    
-    init_GPIO_Pin(MODER,   RIGHT_LED_PORT, RIGHT_LED_PIN, OUTPUT);
-    init_GPIO_Pin(OTYPER,  RIGHT_LED_PORT, RIGHT_LED_PIN, PUSH_PULL);
-    init_GPIO_Pin(OSPEEDR, RIGHT_LED_PORT, RIGHT_LED_PIN, HIGH);
-    init_GPIO_Pin(PUPDR,   RIGHT_LED_PORT, RIGHT_LED_PIN, PULL_UP);
-    
-
-}
-
-
-void init_LEDs_2(){
 
     RCC_AHB1ENR    |= (1UL << 4);      // Enable GPIOD clock
 
@@ -41,8 +22,6 @@ void init_LEDs_2(){
     GPIOE_MODER    &= ~(3UL << 2*15);    // Clear bits for MODER (mode register)
     GPIOE_MODER    |=  (1UL << 2*15);    // Set pin PE15 to Output (01)
 
-    init_GPIO_Pin(MODER,   PORT_E, BIT_15, OUTPUT);
-
     GPIOE_OTYPER   &= ~(1UL << 15);      // Output type register: Output push-pull  (just one bti)
 
     GPIOE_OSPEEDR  &= ~(3UL << 2*15);    // Clear bits in OSPEEDR (Output SPEED Register)
@@ -52,3 +31,22 @@ void init_LEDs_2(){
     GPIOE_PUPDR    |=  (1UL << 2*15);    // Set Pull-down   (2h = 10b)
 
 }
+
+
+
+void doSomething(){
+    while(1){
+             LED_1 = !LED_1;
+             LED_2 = !LED_1;
+    }
+}
+
+void main(){
+    init_LEDs();
+    Delay_ms(100);                        // Delay for stabilization initialization
+  //  welcome();                            // Welcome screen (LCD print & LEDs blik...)
+    doSomething();                        // Infinity loop (dummy loop)
+
+}
+
+

@@ -19,3 +19,7 @@ void init_Timer2(){
  TIM2_CR1 |= (1UL << 0);
 
 }
+
+void enter_sleep(){
+#line 24 "C:/Users/Lazar.Vasic/Desktop/MIPS/timers.c"
+ }

@@ -52,6 +52,7 @@ static const char *alpha[] = {
 
 
 void init_UART_pins();
+void init_UART_pins_2();
 
 void init_UART();
 
@@ -76,7 +77,13 @@ void translate();
 
 void fnc(char DD);
 #line 1 "c:/users/lazar.vasic/desktop/mips/lcd.h"
-#line 21 "c:/users/lazar.vasic/desktop/mips/lcd.h"
+#line 1 "c:/users/lazar.vasic/desktop/mips/gpio.h"
+#line 1 "c:/users/lazar.vasic/desktop/mips/definitions.h"
+#line 13 "c:/users/lazar.vasic/desktop/mips/gpio.h"
+int init_GPIO_Pin(unsigned long type, unsigned long port, unsigned long no, unsigned long val);
+#line 1 "c:/users/lazar.vasic/desktop/mips/config.h"
+#line 1 "c:/users/lazar.vasic/desktop/mips/definitions.h"
+#line 24 "c:/users/lazar.vasic/desktop/mips/lcd.h"
 void set_lcd_en() ;
 void clear_lcd_en();
 
@@ -98,6 +105,7 @@ void clear_lcd_d7();
 
 
 void lcd_gpio_init();
+void lcd_gpio_init_2();
 
 void lcd_data_line_write(char d);
 
@@ -132,20 +140,18 @@ void LCD_PRINT_STRING(char* d);
 
 void LCD_PRINT_CHAR(char d);
 #line 1 "c:/users/lazar.vasic/desktop/mips/led.h"
-
-
-
-
-
+#line 1 "c:/users/lazar.vasic/desktop/mips/gpio.h"
+#line 1 "c:/users/lazar.vasic/desktop/mips/definitions.h"
+#line 1 "c:/users/lazar.vasic/desktop/mips/config.h"
+#line 17 "c:/users/lazar.vasic/desktop/mips/led.h"
 void init_LEDs();
-#line 6 "C:/Users/Lazar.Vasic/Desktop/MIPS/uart.c"
-extern volatile char uart_rd;
-extern volatile char uart_tr;
-
-
+void init_LEDs_2();
+#line 7 "C:/Users/Lazar.Vasic/Desktop/MIPS/uart.c"
 volatile sbit LED_1 at GPIOE_ODR.B12;
 volatile sbit LED_2 at GPIOE_ODR.B15;
 
+extern volatile char uart_rd;
+extern volatile char uart_tr;
 
 
 extern volatile char letter[6] ;
@@ -155,7 +161,34 @@ extern volatile unsigned int letters_cnt;
 extern volatile char word[50] ;
 
 
-void init_UART_pins(){
+ void init_UART_pins(){
+
+
+ RCC_AHB1ENR |= ((1UL << 0));
+ RCC_APB1ENR |= (1UL << 19);
+
+ init_GPIO_Pin( 0 ,  0 ,  0 ,  2UL );
+ init_GPIO_Pin( 0 ,  0 ,  1 ,  2UL );
+
+ init_GPIO_Pin( 1 ,  0 ,  0 ,  0x0 );
+ init_GPIO_Pin( 1 ,  0 ,  1 ,  0x0 );
+
+ init_GPIO_Pin( 2 ,  0 ,  0 ,  0x2 );
+ init_GPIO_Pin( 2 ,  0 ,  1 ,  0x2 );
+
+ init_GPIO_Pin( 3 ,  0 ,  0 ,  0x1 );
+ init_GPIO_Pin( 3 ,  0 ,  1 ,  0x1 );
+
+
+
+ GPIOA_AFRL &= ~(15UL << 0);
+ GPIOA_AFRL &= ~(15UL << 4);
+ GPIOA_AFRL |= (8UL << 0);
+ GPIOA_AFRL |= (8UL << 4);
+
+}
+
+void init_UART_pins_2(){
 
 
  RCC_AHB1ENR |= ((1UL << 0));
@@ -189,7 +222,7 @@ void init_UART_pins(){
 
 void init_UART(){
  init_UART_pins();
-#line 68 "C:/Users/Lazar.Vasic/Desktop/MIPS/uart.c"
+#line 94 "C:/Users/Lazar.Vasic/Desktop/MIPS/uart.c"
  UART4_BRR = 0x00000682;
 
  UART4_CR1 &= ~(1UL << 12);
@@ -223,8 +256,6 @@ void SendStringInterrupt(char *s){
  s++;
  }
 }
-
-
 
 
 int charToInt(char c){

@@ -1,6 +1,9 @@
 #ifndef _LCD_H_
 #define _LCD_H_
 
+#include "gpio.h"
+#include "config.h"
+
 #define LCD_CLEAR_DISPLAY       0x01        // Clear entire display and set Display Data Address to 0. Write 0 to DDRAM
 #define LCD_RETRN_HOME          0x02        // sets DDRAM address 0 and returns display from being shifted to original position. The contents of DDRAM are not change.
 #define LCD_DISP_INIT           0x28        // function set is 4 bit data length and 2 lines
@@ -13,7 +16,7 @@
 #define LCD_CURSOR_OFF          0x0C        // Turn off cursor
 #define LCD_CUR_MOV_LEFT        0x10        // Cursor move and shift to left
 #define LCD_CUR_MOV_RIGHT       0x14        // Cursor move and shift to right
-#define LCD_BUSY                0x80        // LCD is busy
+#define LCD_BUSY                0x80        // LCD is busy (not used)
 
 #define LCD_OUT GPIOC_ODR                   // LCD Output register
 
@@ -39,6 +42,7 @@ void clear_lcd_d7();
 // Funciton to initialize LCD pins
 // GPIO: PC0, PC1, PC2, PC3, PC4, PC13
 void lcd_gpio_init();
+void lcd_gpio_init_2();
 
 void lcd_data_line_write(char d);
 

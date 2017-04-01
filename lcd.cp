@@ -1,6 +1,12 @@
 #line 1 "C:/Users/Lazar.Vasic/Desktop/MIPS/lcd.c"
 #line 1 "c:/users/lazar.vasic/desktop/mips/lcd.h"
-#line 21 "c:/users/lazar.vasic/desktop/mips/lcd.h"
+#line 1 "c:/users/lazar.vasic/desktop/mips/gpio.h"
+#line 1 "c:/users/lazar.vasic/desktop/mips/definitions.h"
+#line 13 "c:/users/lazar.vasic/desktop/mips/gpio.h"
+int init_GPIO_Pin(unsigned long type, unsigned long port, unsigned long no, unsigned long val);
+#line 1 "c:/users/lazar.vasic/desktop/mips/config.h"
+#line 1 "c:/users/lazar.vasic/desktop/mips/definitions.h"
+#line 24 "c:/users/lazar.vasic/desktop/mips/lcd.h"
 void set_lcd_en() ;
 void clear_lcd_en();
 
@@ -22,6 +28,7 @@ void clear_lcd_d7();
 
 
 void lcd_gpio_init();
+void lcd_gpio_init_2();
 
 void lcd_data_line_write(char d);
 
@@ -60,26 +67,66 @@ volatile unsigned int cursor_pos = 0;
 volatile unsigned char screen_space = 0;
 
 
-void set_lcd_en() { GPIOC_ODR |= (1UL << 13); }
-void clear_lcd_en(){ GPIOC_ODR &=~(1UL << 13); }
+void set_lcd_en() { GPIOC_ODR |= (1UL <<  13 ); }
+void clear_lcd_en(){ GPIOC_ODR &= ~(1UL <<  13 ); }
 
-void set_lcd_rs() { GPIOC_ODR |= (1UL << 4); }
-void clear_lcd_rs(){ GPIOC_ODR &=~(1UL << 4); }
+void set_lcd_rs() { GPIOC_ODR |= (1UL <<  4 ); }
+void clear_lcd_rs(){ GPIOC_ODR &= ~(1UL <<  4 ); }
 
-void set_lcd_d4() { GPIOC_ODR |= (1UL << 3); }
-void clear_lcd_d4(){ GPIOC_ODR &=~(1UL << 3); }
+void set_lcd_d4() { GPIOC_ODR |= (1UL <<  3 ); }
+void clear_lcd_d4(){ GPIOC_ODR &= ~(1UL <<  3 ); }
 
-void set_lcd_d5() { GPIOC_ODR |= (1UL << 2); }
-void clear_lcd_d5(){ GPIOC_ODR &=~(1UL << 2); }
+void set_lcd_d5() { GPIOC_ODR |= (1UL <<  2 ); }
+void clear_lcd_d5(){ GPIOC_ODR &= ~(1UL <<  2 ); }
 
-void set_lcd_d6() { GPIOC_ODR |= (1UL << 1); }
-void clear_lcd_d6(){ GPIOC_ODR &=~(1UL << 1); }
+void set_lcd_d6() { GPIOC_ODR |= (1UL <<  1 ); }
+void clear_lcd_d6(){ GPIOC_ODR &= ~(1UL <<  1 ); }
 
-void set_lcd_d7() { GPIOC_ODR |= (1UL << 0); }
-void clear_lcd_d7(){ GPIOC_ODR &= ~(1UL << 0); }
-
+void set_lcd_d7() { GPIOC_ODR |= (1UL <<  0 ); }
+void clear_lcd_d7(){ GPIOC_ODR &= ~(1UL <<  0 ); }
 
 void lcd_gpio_init(){
+
+ RCC_AHB1ENR |= (1UL << 2) ;
+
+
+
+ init_GPIO_Pin( 0 ,  2 ,  13  , 1UL );
+ init_GPIO_Pin( 0 ,  2 ,  4  , 1UL );
+ init_GPIO_Pin( 0 ,  2 ,  3  , 1UL );
+ init_GPIO_Pin( 0 ,  2 ,  2  , 1UL );
+ init_GPIO_Pin( 0 ,  2 ,  1  , 1UL );
+ init_GPIO_Pin( 0 ,  2 ,  0  , 1UL );
+
+
+
+ init_GPIO_Pin( 1 ,  2 ,  13  , 0x0 );
+ init_GPIO_Pin( 1 ,  2 ,  4  , 0x0 );
+ init_GPIO_Pin( 1 ,  2 ,  3  , 0x0 );
+ init_GPIO_Pin( 1 ,  2 ,  2  , 0x0 );
+ init_GPIO_Pin( 1 ,  2 ,  1  , 0x0 );
+ init_GPIO_Pin( 1 ,  2 ,  0  , 0x0 );
+
+
+
+ init_GPIO_Pin( 2 ,  2 ,  13  , 0x2 );
+ init_GPIO_Pin( 2 ,  2 ,  4  , 0x2 );
+ init_GPIO_Pin( 2 ,  2 ,  3  , 0x2 );
+ init_GPIO_Pin( 2 ,  2 ,  2  , 0x2 );
+ init_GPIO_Pin( 2 ,  2 ,  1  , 0x2 );
+ init_GPIO_Pin( 2 ,  2 ,  0  , 0x2 );
+
+
+ init_GPIO_Pin( 3 ,  2 ,  13  , 0x0 );
+ init_GPIO_Pin( 3 ,  2 ,  4  , 0x0 );
+ init_GPIO_Pin( 3 ,  2 ,  3  , 0x0 );
+ init_GPIO_Pin( 3 ,  2 ,  2  , 0x0 );
+ init_GPIO_Pin( 3 ,  2 ,  1  , 0x0 );
+ init_GPIO_Pin( 3 ,  2 ,  0  , 0x0 );
+
+
+}
+void lcd_gpio_init_2(){
 
 
  RCC_AHB1ENR |= (1UL << 2) ;

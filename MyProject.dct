@@ -13817,6 +13817,7 @@ enpec
 enpec_bit
 enpec_i2c1_cr1_bit
 enpec_i2c2_cr1_bit
+enter_sleep
 enumdne
 enumdne
 enumdne
@@ -27199,11 +27200,15 @@ init
 init_all
 init_bit
 init_buttons
+init_buttons_2
+init_gpio_pin
 init_lcd
 init_leds
+init_leds_2
 init_timer2
 init_uart
 init_uart_pins
+init_uart_pins_2
 initf
 initf
 initf_bit
@@ -29181,6 +29186,7 @@ lcd_data_line_write
 lcd_data_write
 lcd_en
 lcd_gpio_init
+lcd_gpio_init_2
 lcd_init
 lcd_left_shift
 lcd_out

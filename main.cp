@@ -1,12 +1,16 @@
 #line 1 "C:/Users/Lazar.Vasic/Desktop/MIPS/main.c"
 #line 1 "c:/users/lazar.vasic/desktop/mips/definitions.h"
 #line 1 "c:/users/lazar.vasic/desktop/mips/led.h"
-
-
-
-
-
+#line 1 "c:/users/lazar.vasic/desktop/mips/gpio.h"
+#line 1 "c:/users/lazar.vasic/desktop/mips/definitions.h"
+#line 13 "c:/users/lazar.vasic/desktop/mips/gpio.h"
+int init_GPIO_Pin(unsigned long type, unsigned long port, unsigned long no, unsigned long val);
+#line 1 "c:/users/lazar.vasic/desktop/mips/definitions.h"
+#line 1 "c:/users/lazar.vasic/desktop/mips/config.h"
+#line 1 "c:/users/lazar.vasic/desktop/mips/definitions.h"
+#line 17 "c:/users/lazar.vasic/desktop/mips/led.h"
 void init_LEDs();
+void init_LEDs_2();
 #line 1 "c:/users/lazar.vasic/desktop/mips/uart.h"
 
 
@@ -60,6 +64,7 @@ static const char *alpha[] = {
 
 
 void init_UART_pins();
+void init_UART_pins_2();
 
 void init_UART();
 
@@ -84,15 +89,15 @@ void translate();
 
 void fnc(char DD);
 #line 1 "c:/users/lazar.vasic/desktop/mips/button.h"
-
-
-
-
-
-
+#line 1 "c:/users/lazar.vasic/desktop/mips/gpio.h"
+#line 1 "c:/users/lazar.vasic/desktop/mips/config.h"
+#line 9 "c:/users/lazar.vasic/desktop/mips/button.h"
 void init_Buttons();
+void init_Buttons_2();
 #line 1 "c:/users/lazar.vasic/desktop/mips/lcd.h"
-#line 21 "c:/users/lazar.vasic/desktop/mips/lcd.h"
+#line 1 "c:/users/lazar.vasic/desktop/mips/gpio.h"
+#line 1 "c:/users/lazar.vasic/desktop/mips/config.h"
+#line 24 "c:/users/lazar.vasic/desktop/mips/lcd.h"
 void set_lcd_en() ;
 void clear_lcd_en();
 
@@ -114,6 +119,7 @@ void clear_lcd_d7();
 
 
 void lcd_gpio_init();
+void lcd_gpio_init_2();
 
 void lcd_data_line_write(char d);
 
@@ -155,11 +161,7 @@ extern volatile int currentTime;
 
 
 void init_Timer2();
-#line 12 "C:/Users/Lazar.Vasic/Desktop/MIPS/main.c"
-extern volatile sbit LED_1;
-extern volatile sbit LED_2;
-
-
+#line 15 "C:/Users/Lazar.Vasic/Desktop/MIPS/main.c"
 volatile sbit BUTTON_1 at GPIOE_IDR.B0;
 volatile sbit BUTTON_2 at GPIOA_IDR.B10;
 
@@ -195,14 +197,20 @@ volatile char time[3];
 
 volatile char uart_rd;
 volatile char uart_tr;
-#line 80 "C:/Users/Lazar.Vasic/Desktop/MIPS/main.c"
+
+
+
+
+
  void init_all(){
-#line 86 "C:/Users/Lazar.Vasic/Desktop/MIPS/main.c"
+#line 61 "C:/Users/Lazar.Vasic/Desktop/MIPS/main.c"
  RCC_APB2ENR |= (1 << 14);
  init_Lcd();
+
  init_Timer2();
  init_Buttons();
  init_LEDs();
+
  init_UART();
 }
 
@@ -210,7 +218,11 @@ void welcome(){
  LCD_CLEAR_SCREEN();
  LCD_CURSOR(0,0);
  LCD_CURSOR_ONN();
-#line 103 "C:/Users/Lazar.Vasic/Desktop/MIPS/main.c"
+
+ Delay_ms(10);
+ LCD_PRINT_STRING("Start");
+ Delay_ms(1000);
+
  LCD_CLEAR_SCREEN();
 }
 
@@ -221,7 +233,7 @@ void doSomething(){
 void main(){
  init_all();
  Delay_ms(100);
- welcome();
+
  doSomething();
 
 }
@@ -309,6 +321,6 @@ void Timer2_Interrupt() iv IVT_INT_TIM2 {
  currentTime++;
  TIM2_SR = 0x00;
  }else{
- LCD_PRINT_STRING("TIMER2 Error");
+ LCD_PRINT_STRING("Timer2 Error");
  }
 }

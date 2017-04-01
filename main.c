@@ -1,5 +1,5 @@
-//NA 32MHz -> Delay_ms(3000) = 6s
-// fclk = 16MHz
+// NA 32MHz (this is not cpu clock, just contant for Delay function) -> Delay_ms(3000) = 6s
+// CPU clock fclk = 16MHz
 
 #include "definitions.h"
 #include "led.h"
@@ -8,9 +8,8 @@
 #include "lcd.h"
 #include "timers.h"
 
-// LEDs
-extern volatile sbit LED_1;
-extern volatile sbit LED_2;
+
+                      
 
 // Buttons
 volatile sbit BUTTON_1 at GPIOE_IDR.B0;
@@ -50,31 +49,7 @@ volatile char uart_rd;
 volatile char uart_tr;
 
 
-/****************************************
- *  MODER - MODE Register               *
- *   00 - Input(reset state)            *
- *   01 - General purpose output mode   *
- *   10 - Alternative function mode     *
- *   11 - Analog mode                   *
- *                                      *
- *  OTYPER - Output TYPE Register       *
- *   0 - Ouptu push-pull (reset state)  *
- *   1 - Output open-drain              *
- *  OSPEEDR - Output SPEED Register     ************************************************************************
- *   00 - Low speed                     *   [x0 2MHZ low speed, 01 10Mhz Medium speed, 11 50 Mhz  Hihg speed]  *
- *   01 - Medium speed                  ************************************************************************
- *   10 - High speed                    *
- *   11 - Very high speed               *
- *                                      *
- *  PUPDR - Pull-Up/Pull-Down           *
- *   00 - No pull-up, pull-down         *
- *   01 - Pull-up                       *
- *   10 - Pull-down                     *
- *   11 - Reserved                      *
- *                                      *
- *  IDR - Input Data Register           *
- *  ODR - Output Data Register          *
-*****************************************/
+
 
 
  void init_all(){
@@ -85,9 +60,11 @@ volatile char uart_tr;
  */
     RCC_APB2ENR |= (1 << 14);             //  System configuration controller clock enable
     init_Lcd();
+
     init_Timer2();
     init_Buttons();
     init_LEDs();
+
     init_UART();
 }
 
@@ -95,11 +72,11 @@ void welcome(){
     LCD_CLEAR_SCREEN();
     LCD_CURSOR(0,0);
     LCD_CURSOR_ONN();
-    /*
+
     Delay_ms(10);
     LCD_PRINT_STRING("Start");
-    Delay_ms(10);
-    */
+    Delay_ms(1000);
+
     LCD_CLEAR_SCREEN();
 }
 
@@ -110,7 +87,7 @@ void doSomething(){
 void main(){
     init_all();                           // Initalize LCD, LEDs, Buttons, UART, Timer...
     Delay_ms(100);                        // Delay for stabilization initialization
-    welcome();                            // Welcome screen (LCD print & LEDs blik...)
+    //welcome();                            // Welcome screen (LCD print & LEDs blik...)
     doSomething();                        // Infinity loop (dummy loop)
 
 }
@@ -198,6 +175,6 @@ void Timer2_Interrupt() iv IVT_INT_TIM2 {
         currentTime++;
         TIM2_SR = 0x00;
     }else{
-        LCD_PRINT_STRING("TIMER2 Error");
+        LCD_PRINT_STRING("Timer2 Error");
     }
 }

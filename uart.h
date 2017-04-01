@@ -50,6 +50,7 @@ static const char *alpha[] = {
 
 
 void init_UART_pins();
+void init_UART_pins_2();
 
 void init_UART();
 
