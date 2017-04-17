@@ -1,12 +1,12 @@
 [DEVICE]
 Name=STM32F407VG
-Clock=32000000
+Clock=168000000
 [MEMORY_MODEL]
 Value=0
 [BUILD_TYPE]
 Value=0
 [ACTIVE_TAB]
-Value=uart.c
+Value=config.h
 [USE_EEPROM]
 Value=0
 [USE_HEAP]
@@ -30,16 +30,12 @@ Count=0
 Count=0
 ActiveImageIndex=-1
 [OPENED_FILES]
-Count=9
+Count=5
 File0=main.c
-File1=gpio.h
-File2=gpio.c
-File3=definitions.h
-File4=lcd.h
-File5=lcd.c
-File6=uart.h
-File7=uart.c
-File8=config.h
+File1=config.h
+File2=definitions.h
+File3=uart.c
+File4=uart.h
 [EEPROM]
 Count=0
 [ACTIVE_COMMENTS_FILES]
@@ -47,11 +43,10 @@ Count=0
 [OTHER_FILES]
 Count=0
 [SEARCH_PATH]
-Count=4
+Count=3
 Path0=C:\Users\Lazar.Vasic\Documents\Mikroelektronika\mikroC PRO for ARM\Defs\
 Path1=C:\Users\Lazar.Vasic\Desktop\MIPS\
 Path2=C:\Users\Lazar.Vasic\Documents\Mikroelektronika\mikroC PRO for ARM\Uses\ST M4\
-Path3=C:\Users\Lazar.Vasic\Desktop\MIPS\
 [HEADER_PATH]
 Count=1
 Path0=C:\Users\Lazar.Vasic\Desktop\MIPS\

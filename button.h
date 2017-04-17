@@ -7,6 +7,6 @@
 // Funciton to initialize buttons
 // GPIO: PE0(left), PA10(right)
 void init_Buttons();
-void init_Buttons_2();
+//void init_Buttons_2();
 
 #endif

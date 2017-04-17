@@ -1,8 +1,8 @@
 _init_LEDs:
-;led.c,6 :: 		void init_LEDs(){
+;led.c,4 :: 		void init_LEDs(){
 SUB	SP, SP, #4
 STR	LR, [SP, #0]
-;led.c,7 :: 		RCC_AHB1ENR    |= (1UL << 4);      // Enable GPIOD clock
+;led.c,5 :: 		RCC_AHB1ENR    |= (1UL << LEFT_LED_PORT);       // Enable GPIOE clock for left led
 MOVW	R0, #lo_addr(RCC_AHB1ENR+0)
 MOVT	R0, #hi_addr(RCC_AHB1ENR+0)
 LDR	R0, [R0, #0]
@@ -10,201 +10,57 @@ ORR	R1, R0, #16
 MOVW	R0, #lo_addr(RCC_AHB1ENR+0)
 MOVT	R0, #hi_addr(RCC_AHB1ENR+0)
 STR	R1, [R0, #0]
-;led.c,10 :: 		init_GPIO_Pin(MODER,   LEFT_LED_PORT,  LEFT_LED_PIN,  OUTPUT);
+;led.c,8 :: 		init_GPIO_Pin(MODER,   LEFT_LED_PORT,  LEFT_LED_PIN,  OUTPUT);
 MOV	R3, #1
 MOVS	R2, #12
 MOVS	R1, #4
 MOVS	R0, #0
 BL	_init_GPIO_Pin+0
-;led.c,11 :: 		init_GPIO_Pin(OTYPER,  LEFT_LED_PORT,  LEFT_LED_PIN,  PUSH_PULL);
-MOVS	R3, #0
+;led.c,9 :: 		init_GPIO_Pin(OTYPER,  LEFT_LED_PORT,  LEFT_LED_PIN,  PUSH_PULL);
+MOV	R3, #0
 MOVS	R2, #12
 MOVS	R1, #4
 MOVS	R0, #1
 BL	_init_GPIO_Pin+0
-;led.c,12 :: 		init_GPIO_Pin(OSPEEDR, LEFT_LED_PORT,  LEFT_LED_PIN,  HIGH);
-MOVS	R3, #2
+;led.c,10 :: 		init_GPIO_Pin(OSPEEDR, LEFT_LED_PORT,  LEFT_LED_PIN,  HIGH);
+MOV	R3, #2
 MOVS	R2, #12
 MOVS	R1, #4
 MOVS	R0, #2
 BL	_init_GPIO_Pin+0
-;led.c,13 :: 		init_GPIO_Pin(PUPDR,   LEFT_LED_PORT,  LEFT_LED_PIN,  PULL_UP);
-MOVS	R3, #1
+;led.c,11 :: 		init_GPIO_Pin(PUPDR,   LEFT_LED_PORT,  LEFT_LED_PIN,  PULL_UP);
+MOV	R3, #1
 MOVS	R2, #12
 MOVS	R1, #4
 MOVS	R0, #3
 BL	_init_GPIO_Pin+0
-;led.c,15 :: 		init_GPIO_Pin(MODER,   RIGHT_LED_PORT, RIGHT_LED_PIN, OUTPUT);
+;led.c,13 :: 		init_GPIO_Pin(MODER,   RIGHT_LED_PORT, RIGHT_LED_PIN, OUTPUT);
 MOV	R3, #1
 MOVS	R2, #15
 MOVS	R1, #4
 MOVS	R0, #0
 BL	_init_GPIO_Pin+0
-;led.c,16 :: 		init_GPIO_Pin(OTYPER,  RIGHT_LED_PORT, RIGHT_LED_PIN, PUSH_PULL);
-MOVS	R3, #0
+;led.c,14 :: 		init_GPIO_Pin(OTYPER,  RIGHT_LED_PORT, RIGHT_LED_PIN, PUSH_PULL);
+MOV	R3, #0
 MOVS	R2, #15
 MOVS	R1, #4
 MOVS	R0, #1
 BL	_init_GPIO_Pin+0
-;led.c,17 :: 		init_GPIO_Pin(OSPEEDR, RIGHT_LED_PORT, RIGHT_LED_PIN, HIGH);
-MOVS	R3, #2
+;led.c,15 :: 		init_GPIO_Pin(OSPEEDR, RIGHT_LED_PORT, RIGHT_LED_PIN, HIGH);
+MOV	R3, #2
 MOVS	R2, #15
 MOVS	R1, #4
 MOVS	R0, #2
 BL	_init_GPIO_Pin+0
-;led.c,18 :: 		init_GPIO_Pin(PUPDR,   RIGHT_LED_PORT, RIGHT_LED_PIN, PULL_UP);
-MOVS	R3, #1
+;led.c,16 :: 		init_GPIO_Pin(PUPDR,   RIGHT_LED_PORT, RIGHT_LED_PIN, PULL_UP);
+MOV	R3, #1
 MOVS	R2, #15
 MOVS	R1, #4
 MOVS	R0, #3
 BL	_init_GPIO_Pin+0
-;led.c,21 :: 		}
+;led.c,19 :: 		}
 L_end_init_LEDs:
 LDR	LR, [SP, #0]
 ADD	SP, SP, #4
 BX	LR
 ; end of _init_LEDs
-_init_LEDs_2:
-;led.c,24 :: 		void init_LEDs_2(){
-SUB	SP, SP, #4
-STR	LR, [SP, #0]
-;led.c,26 :: 		RCC_AHB1ENR    |= (1UL << 4);      // Enable GPIOD clock
-MOVW	R0, #lo_addr(RCC_AHB1ENR+0)
-MOVT	R0, #hi_addr(RCC_AHB1ENR+0)
-LDR	R0, [R0, #0]
-ORR	R1, R0, #16
-MOVW	R0, #lo_addr(RCC_AHB1ENR+0)
-MOVT	R0, #hi_addr(RCC_AHB1ENR+0)
-STR	R1, [R0, #0]
-;led.c,29 :: 		GPIOE_MODER    &= ~(3UL << 2*12);    // Clear bits in MODER
-MOVW	R0, #lo_addr(GPIOE_MODER+0)
-MOVT	R0, #hi_addr(GPIOE_MODER+0)
-LDR	R1, [R0, #0]
-MVN	R0, #50331648
-ANDS	R1, R0
-MOVW	R0, #lo_addr(GPIOE_MODER+0)
-MOVT	R0, #hi_addr(GPIOE_MODER+0)
-STR	R1, [R0, #0]
-;led.c,30 :: 		GPIOE_MODER    |=  (1UL << 2*12);    // Set pin PE12 to Output (01)
-MOVW	R0, #lo_addr(GPIOE_MODER+0)
-MOVT	R0, #hi_addr(GPIOE_MODER+0)
-LDR	R0, [R0, #0]
-ORR	R1, R0, #16777216
-MOVW	R0, #lo_addr(GPIOE_MODER+0)
-MOVT	R0, #hi_addr(GPIOE_MODER+0)
-STR	R1, [R0, #0]
-;led.c,32 :: 		GPIOE_OTYPER   &= ~(1UL << 12);      // Output type register: Output push-pull  (just one bti)
-MOVW	R0, #lo_addr(GPIOE_OTYPER+0)
-MOVT	R0, #hi_addr(GPIOE_OTYPER+0)
-LDR	R1, [R0, #0]
-MVN	R0, #4096
-ANDS	R1, R0
-MOVW	R0, #lo_addr(GPIOE_OTYPER+0)
-MOVT	R0, #hi_addr(GPIOE_OTYPER+0)
-STR	R1, [R0, #0]
-;led.c,34 :: 		GPIOE_OSPEEDR  &= ~(3UL << 2*12);    // Clear bits in OSPEEDR
-MOVW	R0, #lo_addr(GPIOE_OSPEEDR+0)
-MOVT	R0, #hi_addr(GPIOE_OSPEEDR+0)
-LDR	R1, [R0, #0]
-MVN	R0, #50331648
-ANDS	R1, R0
-MOVW	R0, #lo_addr(GPIOE_OSPEEDR+0)
-MOVT	R0, #hi_addr(GPIOE_OSPEEDR+0)
-STR	R1, [R0, #0]
-;led.c,35 :: 		GPIOE_OSPEEDR  |=  (2UL << 2*12);    // Set High speed   (2h = 10b)
-MOVW	R0, #lo_addr(GPIOE_OSPEEDR+0)
-MOVT	R0, #hi_addr(GPIOE_OSPEEDR+0)
-LDR	R0, [R0, #0]
-ORR	R1, R0, #33554432
-MOVW	R0, #lo_addr(GPIOE_OSPEEDR+0)
-MOVT	R0, #hi_addr(GPIOE_OSPEEDR+0)
-STR	R1, [R0, #0]
-;led.c,37 :: 		GPIOE_PUPDR    &= ~(3UL << 2*12);    // Clear bits in PUPDR
-MOVW	R0, #lo_addr(GPIOE_PUPDR+0)
-MOVT	R0, #hi_addr(GPIOE_PUPDR+0)
-LDR	R1, [R0, #0]
-MVN	R0, #50331648
-ANDS	R1, R0
-MOVW	R0, #lo_addr(GPIOE_PUPDR+0)
-MOVT	R0, #hi_addr(GPIOE_PUPDR+0)
-STR	R1, [R0, #0]
-;led.c,38 :: 		GPIOE_PUPDR    |=  (1UL << 2*12);    // Set Pull-down   (2h = 10b)
-MOVW	R0, #lo_addr(GPIOE_PUPDR+0)
-MOVT	R0, #hi_addr(GPIOE_PUPDR+0)
-LDR	R0, [R0, #0]
-ORR	R1, R0, #16777216
-MOVW	R0, #lo_addr(GPIOE_PUPDR+0)
-MOVT	R0, #hi_addr(GPIOE_PUPDR+0)
-STR	R1, [R0, #0]
-;led.c,41 :: 		GPIOE_MODER    &= ~(3UL << 2*15);    // Clear bits for MODER (mode register)
-MOVW	R0, #lo_addr(GPIOE_MODER+0)
-MOVT	R0, #hi_addr(GPIOE_MODER+0)
-LDR	R1, [R0, #0]
-MVN	R0, #-1073741824
-ANDS	R1, R0
-MOVW	R0, #lo_addr(GPIOE_MODER+0)
-MOVT	R0, #hi_addr(GPIOE_MODER+0)
-STR	R1, [R0, #0]
-;led.c,42 :: 		GPIOE_MODER    |=  (1UL << 2*15);    // Set pin PE15 to Output (01)
-MOVW	R0, #lo_addr(GPIOE_MODER+0)
-MOVT	R0, #hi_addr(GPIOE_MODER+0)
-LDR	R0, [R0, #0]
-ORR	R1, R0, #1073741824
-MOVW	R0, #lo_addr(GPIOE_MODER+0)
-MOVT	R0, #hi_addr(GPIOE_MODER+0)
-STR	R1, [R0, #0]
-;led.c,44 :: 		init_GPIO_Pin(MODER,   PORT_E, BIT_15, OUTPUT);
-MOV	R3, #1
-MOVS	R2, #15
-MOVS	R1, #4
-MOVS	R0, #0
-BL	_init_GPIO_Pin+0
-;led.c,46 :: 		GPIOE_OTYPER   &= ~(1UL << 15);      // Output type register: Output push-pull  (just one bti)
-MOVW	R0, #lo_addr(GPIOE_OTYPER+0)
-MOVT	R0, #hi_addr(GPIOE_OTYPER+0)
-LDR	R1, [R0, #0]
-MOVW	R0, #32767
-ANDS	R1, R0
-MOVW	R0, #lo_addr(GPIOE_OTYPER+0)
-MOVT	R0, #hi_addr(GPIOE_OTYPER+0)
-STR	R1, [R0, #0]
-;led.c,48 :: 		GPIOE_OSPEEDR  &= ~(3UL << 2*15);    // Clear bits in OSPEEDR (Output SPEED Register)
-MOVW	R0, #lo_addr(GPIOE_OSPEEDR+0)
-MOVT	R0, #hi_addr(GPIOE_OSPEEDR+0)
-LDR	R1, [R0, #0]
-MVN	R0, #-1073741824
-ANDS	R1, R0
-MOVW	R0, #lo_addr(GPIOE_OSPEEDR+0)
-MOVT	R0, #hi_addr(GPIOE_OSPEEDR+0)
-STR	R1, [R0, #0]
-;led.c,49 :: 		GPIOE_OSPEEDR  |=  (2UL << 2*15);    // Set High speed   (2h = 10b)
-MOVW	R0, #lo_addr(GPIOE_OSPEEDR+0)
-MOVT	R0, #hi_addr(GPIOE_OSPEEDR+0)
-LDR	R0, [R0, #0]
-ORR	R1, R0, #-2147483648
-MOVW	R0, #lo_addr(GPIOE_OSPEEDR+0)
-MOVT	R0, #hi_addr(GPIOE_OSPEEDR+0)
-STR	R1, [R0, #0]
-;led.c,51 :: 		GPIOE_PUPDR    &= ~(3UL << 2*15);    // Clear bits for pupdr (pull-up/pull-down register)
-MOVW	R0, #lo_addr(GPIOE_PUPDR+0)
-MOVT	R0, #hi_addr(GPIOE_PUPDR+0)
-LDR	R1, [R0, #0]
-MVN	R0, #-1073741824
-ANDS	R1, R0
-MOVW	R0, #lo_addr(GPIOE_PUPDR+0)
-MOVT	R0, #hi_addr(GPIOE_PUPDR+0)
-STR	R1, [R0, #0]
-;led.c,52 :: 		GPIOE_PUPDR    |=  (1UL << 2*15);    // Set Pull-down   (2h = 10b)
-MOVW	R0, #lo_addr(GPIOE_PUPDR+0)
-MOVT	R0, #hi_addr(GPIOE_PUPDR+0)
-LDR	R0, [R0, #0]
-ORR	R1, R0, #1073741824
-MOVW	R0, #lo_addr(GPIOE_PUPDR+0)
-MOVT	R0, #hi_addr(GPIOE_PUPDR+0)
-STR	R1, [R0, #0]
-;led.c,54 :: 		}
-L_end_init_LEDs_2:
-LDR	LR, [SP, #0]
-ADD	SP, SP, #4
-BX	LR
-; end of _init_LEDs_2

@@ -9,10 +9,11 @@ void init_Buttons(){
     SYSCFG_EXTICR1 |= 0x4;               // SYStem Configuration Controler - EXTernal Interrupt Configuration Register 1
                                          // EXTI0 (on first 4 bits) interrupt Port E (4 - 0100)
 
-    EXTI_IMR       |= 1;                 // Interrupt mask on line (1)
-    EXTI_FTSR      |= 1;                 // Fall edge (press button)
-  //EXTI_RTSR      |= 1;                 // Rise edge (realese button)
-
+    EXTI_IMR       |= 1 << LEFT_BUTTON_PIN;                 // Interrupt mask on line (1)
+    EXTI_FTSR      |= 1 << LEFT_BUTTON_PIN;                 // Fall edge (press button)
+  //EXTI_RTSR      |= 1 << LEFT_BUTTON_PIN;                 // Rise edge (realese button)
+  
+  
     NVIC_IntEnable(IVT_INT_EXTI0);       // Nested Vector Interrupt Controller
 
     //Init right button
@@ -24,14 +25,14 @@ void init_Buttons(){
 
 
 
-    EXTI_IMR       |= (1 << 10);         // Interrupt mask on line (10)
-    EXTI_FTSR      |= (1 << 10);         // Fall edge (press button)
-  //EXTI_RTSR      |= (1 << 10);         // Rise edge (realese button)
+    EXTI_IMR       |= 1 << RIGHT_BUTTON_PIN;         // Interrupt mask on line (10)
+    EXTI_FTSR      |= 1 << RIGHT_BUTTON_PIN;         // Fall edge (press button)
+  //EXTI_RTSR      |= 1 << RIGHT_BUTTON_PIN;         // Rise edge (realese button)
 
     NVIC_IntEnable(IVT_INT_EXTI15_10);   // Nested Vector Interrupt Controller
 
 }
-
+    /*
 void init_Buttons_2(){
     //Init left button
     GPIOE_MODER    &= ~(3UL << 2*0);   // Clear bits in MODER - Input (00)
@@ -68,4 +69,4 @@ void init_Buttons_2(){
 
     NVIC_IntEnable(IVT_INT_EXTI15_10);   // Nested Vector Interrupt Controller
 
-}
+}     */

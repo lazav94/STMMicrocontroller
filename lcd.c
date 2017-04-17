@@ -24,7 +24,8 @@ void clear_lcd_d7(){ GPIOC_ODR &= ~(1UL << LCD_D7_PIN); }
 
 void lcd_gpio_init(){
     // Enable GPIOC clock
-    RCC_AHB1ENR    |= (1UL << 2) ;
+    RCC_AHB1ENR    |= (1UL << PORT_C) ;
+    // All pins are on port_c, if we have some pin on other port we must enable that rcc_ahb1
 
 
     //int init_GPIO_Pin(unsigned long type, unsigned long port, unsigned long no, unsigned long val)
@@ -63,7 +64,7 @@ void lcd_gpio_init(){
 
 
 }
-void lcd_gpio_init_2(){
+/*void lcd_gpio_init_2(){
 
     // Enable GPIOC clock
     RCC_AHB1ENR    |= (1UL << 2) ;
@@ -117,6 +118,7 @@ void lcd_gpio_init_2(){
     GPIOC_PUPDR    &= ~(3UL << 2*1);
     GPIOC_PUPDR    &= ~(3UL << 2*0);
 }
+*/
 
 void lcd_data_line_write(char d){
 

@@ -1,13 +1,8 @@
 #line 1 "C:/Users/Lazar.Vasic/Desktop/MIPS/uart.c"
 #line 1 "c:/users/lazar.vasic/desktop/mips/uart.h"
-
-
-
-
-
-
-
-
+#line 60 "c:/users/lazar.vasic/desktop/mips/uart.h"
+extern unsigned dotTime;
+extern unsigned dashTime;
 
 
 static const char *alpha[] = {
@@ -57,6 +52,7 @@ void init_UART_pins_2();
 void init_UART();
 
 
+
 void SendCharInterrupt (int ch) ;
 
 void SendStringInterrupt(char *s);
@@ -76,11 +72,16 @@ void clearLetter();
 void translate();
 
 void fnc(char DD);
+
+void LED_char_translate(char c);
+
+void LED_string_translate(char *s);
 #line 1 "c:/users/lazar.vasic/desktop/mips/lcd.h"
 #line 1 "c:/users/lazar.vasic/desktop/mips/gpio.h"
 #line 1 "c:/users/lazar.vasic/desktop/mips/definitions.h"
 #line 13 "c:/users/lazar.vasic/desktop/mips/gpio.h"
 int init_GPIO_Pin(unsigned long type, unsigned long port, unsigned long no, unsigned long val);
+int init_UART4_Register(unsigned long type, unsigned long no, unsigned long val);
 #line 1 "c:/users/lazar.vasic/desktop/mips/config.h"
 #line 1 "c:/users/lazar.vasic/desktop/mips/definitions.h"
 #line 24 "c:/users/lazar.vasic/desktop/mips/lcd.h"
@@ -105,7 +106,7 @@ void clear_lcd_d7();
 
 
 void lcd_gpio_init();
-void lcd_gpio_init_2();
+
 
 void lcd_data_line_write(char d);
 
@@ -143,9 +144,8 @@ void LCD_PRINT_CHAR(char d);
 #line 1 "c:/users/lazar.vasic/desktop/mips/gpio.h"
 #line 1 "c:/users/lazar.vasic/desktop/mips/definitions.h"
 #line 1 "c:/users/lazar.vasic/desktop/mips/config.h"
-#line 17 "c:/users/lazar.vasic/desktop/mips/led.h"
+#line 8 "c:/users/lazar.vasic/desktop/mips/led.h"
 void init_LEDs();
-void init_LEDs_2();
 #line 7 "C:/Users/Lazar.Vasic/Desktop/MIPS/uart.c"
 volatile sbit LED_1 at GPIOE_ODR.B12;
 volatile sbit LED_2 at GPIOE_ODR.B15;
@@ -164,53 +164,23 @@ extern volatile char word[50] ;
  void init_UART_pins(){
 
 
- RCC_AHB1ENR |= ((1UL << 0));
+ RCC_AHB1ENR |= (1UL <<  0 );
+
  RCC_APB1ENR |= (1UL << 19);
 
  init_GPIO_Pin( 0 ,  0 ,  0 ,  2UL );
  init_GPIO_Pin( 0 ,  0 ,  1 ,  2UL );
 
- init_GPIO_Pin( 1 ,  0 ,  0 ,  0x0 );
- init_GPIO_Pin( 1 ,  0 ,  1 ,  0x0 );
+ init_GPIO_Pin( 1 ,  0 ,  0 ,  0UL );
+ init_GPIO_Pin( 1 ,  0 ,  1 ,  0UL );
 
- init_GPIO_Pin( 2 ,  0 ,  0 ,  0x2 );
- init_GPIO_Pin( 2 ,  0 ,  1 ,  0x2 );
+ init_GPIO_Pin( 2 ,  0 ,  0 ,  2UL );
+ init_GPIO_Pin( 2 ,  0 ,  1 ,  2UL );
 
- init_GPIO_Pin( 3 ,  0 ,  0 ,  0x1 );
- init_GPIO_Pin( 3 ,  0 ,  1 ,  0x1 );
-
-
-
- GPIOA_AFRL &= ~(15UL << 0);
- GPIOA_AFRL &= ~(15UL << 4);
- GPIOA_AFRL |= (8UL << 0);
- GPIOA_AFRL |= (8UL << 4);
-
-}
-
-void init_UART_pins_2(){
+ init_GPIO_Pin( 3 ,  0 ,  0 ,  1UL );
+ init_GPIO_Pin( 3 ,  0 ,  1 ,  1UL );
 
 
- RCC_AHB1ENR |= ((1UL << 0));
- RCC_APB1ENR |= (1UL << 19);
-
- GPIOA_MODER &= ~((3UL << 2*0));
- GPIOA_MODER &= ~((3UL << 2*1));
- GPIOA_MODER |= (2UL << 2*0);
- GPIOA_MODER |= (2UL << 2*1);
-
- GPIOA_OTYPER &= ~((1UL << 0));
- GPIOA_OTYPER &= ~((1UL << 1));
-
- GPIOA_OSPEEDR &= ~((3UL << 2*0));
- GPIOA_OSPEEDR &= ~((3UL << 2*1));
- GPIOA_OSPEEDR |= ((3UL << 2*0));
- GPIOA_OSPEEDR |= ((3UL << 2*1));
-
- GPIOA_PUPDR &= ~((3UL << 2*0));
- GPIOA_PUPDR &= ~((3UL << 2*1));
- GPIOA_PUPDR |= (1UL << 2*0);
- GPIOA_PUPDR |= (1UL << 2*1);
 
  GPIOA_AFRL &= ~(15UL << 0);
  GPIOA_AFRL &= ~(15UL << 4);
@@ -218,11 +188,30 @@ void init_UART_pins_2(){
  GPIOA_AFRL |= (8UL << 4);
 
 }
-
-
+#line 80 "C:/Users/Lazar.Vasic/Desktop/MIPS/uart.c"
 void init_UART(){
  init_UART_pins();
 #line 94 "C:/Users/Lazar.Vasic/Desktop/MIPS/uart.c"
+ UART4_BRR = 0x00000682;
+
+ init_UART4_Register( 1 ,  12 ,  0UL );
+ init_UART4_Register( 1 ,  10 ,  0UL );
+
+ init_UART4_Register( 1 ,  2UL ,  1UL );
+ init_UART4_Register( 1 ,  3UL ,  1UL );
+
+ init_UART4_Register( 1 ,  5UL , 1UL );
+
+
+ NVIC_IntEnable(IVT_INT_UART4);
+
+ init_UART4_Register( 1 ,  13UL , 1UL );
+}
+
+
+void init_UART_2(){
+ init_UART_pins();
+#line 125 "C:/Users/Lazar.Vasic/Desktop/MIPS/uart.c"
  UART4_BRR = 0x00000682;
 
  UART4_CR1 &= ~(1UL << 12);
@@ -232,7 +221,7 @@ void init_UART(){
  UART4_CR1 |= (1UL << 3);
 
 
- UART4_CR1 |= (1UL << 5);
+ UART4_CR1 |= (1UL <<  5UL );
 
 
  NVIC_IntEnable(IVT_INT_UART4);
@@ -246,7 +235,7 @@ void init_UART(){
 
 void SendCharInterrupt (int ch) {
  uart_tr = ch;
- UART4_CR1 |= (1UL << 7);
+ UART4_CR1 |= (1UL <<  7UL );
  Delay_ms(1);
 }
 
@@ -269,9 +258,28 @@ int charToInt(char c){
  else return -1;
 }
 
+void LED_char_translate(char c){
+ LED_1 = 1;
+ if(c ==  '.' ) Delay_ms( 3 * 3 );
+ else Delay_ms(3* 3 * 3 );
+ LED_1 = 0;
+ Delay_ms( 3 * 3 );
+}
+
+void LED_string_translate(char *s){
+ while(*s){
+ LED_char_translate(*s);
+ s++;
+
+ }
+}
+
 int convert(char c){
  if(charToInt(c) == -1) strcpy(letter, "!");
- else strcpy(letter, alpha[charToInt(c)]);
+ else{
+ strcpy(letter, alpha[charToInt(c)]);
+
+ }
 }
 
 void convertString(char *s){
@@ -311,6 +319,7 @@ void clearLetter(){
 
 
 void translate(){
+
  int temp;
 
  letter[letter_cnt + 1] = '\0';
@@ -328,14 +337,22 @@ void translate(){
  }
  clearLetter();
 
-
 }
 
 void fnc(char DD){
- LED_2 = 1;
- LED_1 = DD ==  '.'  ? 0 : 1;
+
+ if(DD ==  '#' ){
+ LCD_CLEAR_SCREEN();
  LCD_PRINT_CHAR(DD);
+ SendCharInterrupt(' ');
+ clearLetter();
+ }
+ else{
+ LCD_PRINT_CHAR(DD);
+
  letter[letter_cnt++] = DD;
  if(letter_cnt == 5)
  translate();
+ }
+
 }

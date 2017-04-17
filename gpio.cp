@@ -3,6 +3,7 @@
 #line 1 "c:/users/lazar.vasic/desktop/mips/definitions.h"
 #line 13 "c:/users/lazar.vasic/desktop/mips/gpio.h"
 int init_GPIO_Pin(unsigned long type, unsigned long port, unsigned long no, unsigned long val);
+int init_UART4_Register(unsigned long type, unsigned long no, unsigned long val);
 #line 1 "c:/users/lazar.vasic/desktop/mips/lcd.h"
 #line 1 "c:/users/lazar.vasic/desktop/mips/gpio.h"
 #line 1 "c:/users/lazar.vasic/desktop/mips/config.h"
@@ -29,7 +30,7 @@ void clear_lcd_d7();
 
 
 void lcd_gpio_init();
-void lcd_gpio_init_2();
+
 
 void lcd_data_line_write(char d);
 
@@ -63,7 +64,7 @@ void LCD_LEFT_SHIFT(void);
 void LCD_PRINT_STRING(char* d);
 
 void LCD_PRINT_CHAR(char d);
-#line 4 "C:/Users/Lazar.Vasic/Desktop/MIPS/gpio.c"
+#line 24 "C:/Users/Lazar.Vasic/Desktop/MIPS/gpio.c"
 int init_GPIO_Pin(unsigned long type, unsigned long port, unsigned long no, unsigned long val){
  if(type !=  1 ) no <<= 1;
 
@@ -149,8 +150,64 @@ int init_GPIO_Pin(unsigned long type, unsigned long port, unsigned long no, unsi
  default:
  return 4;
  }
+ case  4 :
+ switch(port){
+ case  0 :
+ GPIOA_AFRL &= ~(3UL << no);
+ GPIOA_AFRL |= (val << no); return 0;
+ case  1 :
+ GPIOB_AFRL &= ~(3UL << no);
+ GPIOB_AFRL |= (val << no); return 0;
+ case  2 :
+ GPIOC_AFRL &= ~(3UL << no);
+ GPIOC_AFRL |= (val << no); return 0;
+ case  3 :
+ GPIOD_AFRL &= ~(3UL << no);
+ GPIOD_AFRL |= (val << no); return 0;
+ case  4 :
+ GPIOE_AFRL &= ~(3UL << no);
+ GPIOE_AFRL |= (val << no); return 0;
+ default:
+ return 4;
+ }
+ case  5 :
+ switch(port){
+ case  0 :
+ GPIOA_AFRH &= ~(3UL << no);
+ GPIOA_AFRH |= (val << no); return 0;
+ case  1 :
+ GPIOB_AFRH &= ~(3UL << no);
+ GPIOB_AFRH |= (val << no); return 0;
+ case  2 :
+ GPIOC_AFRH &= ~(3UL << no);
+ GPIOC_AFRH |= (val << no); return 0;
+ case  3 :
+ GPIOD_AFRH &= ~(3UL << no);
+ GPIOD_AFRH |= (val << no); return 0;
+ case  4 :
+ GPIOE_AFRH &= ~(3UL << no);
+ GPIOE_AFRH |= (val << no); return 0;
+ default:
+ return 4;
+ }
  default:
  return 5;
+ }
+ return 0;
+}
+
+
+int init_UART4_Register(unsigned long type, unsigned long no, unsigned long val){
+ switch(type){
+
+ case  1 :
+ UART4_CR1 &= ~(val << no);
+ UART4_CR1 |= val << no;
+ break;
+
+
+ default: return -1;
+
  }
  return 0;
 }

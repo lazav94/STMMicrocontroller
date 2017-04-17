@@ -42,7 +42,7 @@ void clear_lcd_d7();
 // Funciton to initialize LCD pins
 // GPIO: PC0, PC1, PC2, PC3, PC4, PC13
 void lcd_gpio_init();
-void lcd_gpio_init_2();
+//void lcd_gpio_init_2();
 
 void lcd_data_line_write(char d);
 

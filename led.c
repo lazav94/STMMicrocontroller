@@ -1,11 +1,9 @@
 #include "led.h"
 
-                                                                                                                                  // GPIO: PE12(left), PE15(right)
-
-
+// GPIO: PE12(left), PE15(right)
 void init_LEDs(){
-    RCC_AHB1ENR    |= (1UL << 4);      // Enable GPIOD clock
-    
+    RCC_AHB1ENR    |= (1UL << LEFT_LED_PORT);       // Enable GPIOE clock for left led
+    // RCC_AHB1ENR    |= (1UL << RIGHT_LED_PORT);       // Enable GPIOE clock for right led
     
     init_GPIO_Pin(MODER,   LEFT_LED_PORT,  LEFT_LED_PIN,  OUTPUT);
     init_GPIO_Pin(OTYPER,  LEFT_LED_PORT,  LEFT_LED_PIN,  PUSH_PULL);
@@ -19,7 +17,7 @@ void init_LEDs(){
     
 
 }
-
+ /*
 
 void init_LEDs_2(){
 
@@ -41,7 +39,7 @@ void init_LEDs_2(){
     GPIOE_MODER    &= ~(3UL << 2*15);    // Clear bits for MODER (mode register)
     GPIOE_MODER    |=  (1UL << 2*15);    // Set pin PE15 to Output (01)
 
-    init_GPIO_Pin(MODER,   PORT_E, BIT_15, OUTPUT);
+ //   init_GPIO_Pin(MODER,   PORT_E, BIT_15, OUTPUT);
 
     GPIOE_OTYPER   &= ~(1UL << 15);      // Output type register: Output push-pull  (just one bti)
 
@@ -51,4 +49,4 @@ void init_LEDs_2(){
     GPIOE_PUPDR    &= ~(3UL << 2*15);    // Clear bits for pupdr (pull-up/pull-down register)
     GPIOE_PUPDR    |=  (1UL << 2*15);    // Set Pull-down   (2h = 10b)
 
-}
+}   */

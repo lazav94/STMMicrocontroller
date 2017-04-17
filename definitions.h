@@ -33,8 +33,41 @@
 #define OTYPER  1
 #define OSPEEDR 2
 #define PUPDR   3
+#define AFRL    4
+#define AFRH    5
 
+#define BRR     0
+#define CR1     1
+#define CR2     2
+#define CR3     3
 
+#define  WORD_8B 0UL
+#define  WORD_9B 1UL
+#define  WORD_LENGTH 12
+
+#define PARITY_DISABLE 0UL
+#define PARITY_ENABLE  1UL
+#define PARITY         10
+
+#define UART4_ENABLE   1UL
+#define UART4_DISABLE  0UL
+#define UART4_ED       13UL
+
+#define UART_RECEIVE   2UL
+#define UART_RX_ON     1UL
+#define UART_RX_OFF    0UL
+
+#define UART_TRANSMIT  3UL
+#define UART_TX_ON     1UL
+#define UART_TX_OFF    0UL
+
+#define UART_RX_INTERRUPT     5UL
+#define UART_RX_INTERRUPT_ON  1UL
+#define UART_RX_INTERRUPT_OFF 0UL
+
+#define UART_TX_INTERRUPT     7UL
+#define UART_TX_INTERRUPT_ON  1UL
+#define UART_TX_INTERRUPT_OFF 0UL
 
 
 #define PORT_A  0
@@ -93,18 +126,25 @@
 #define ALTERNATIVE_FUNCTION  2UL
 #define ANALOG_MODE           3UL
 
-#define PUSH_PULL             0x0
-#define OPEN_DRAIN            0x1
+#define PUSH_PULL             0UL
+#define OPEN_DRAIN            1UL
 
-#define LOW                   0x0
-#define MEDIUM                0x1
-#define HIGH                  0x2
-#define VERY_HIGH             0x3
+#define LOW                   0UL
+#define MEDIUM                1UL
+#define HIGH                  2UL
+#define VERY_HIGH             3UL
 
-#define NO_PULL_PUSH          0x0
-#define PULL_UP               0x1
-#define PULL_DOWN             0x2
-#define RESERVED              0x3
+#define NO_PULL_PUSH          0UL
+#define PULL_UP               1UL
+#define PULL_DOWN             2UL
+#define RESERVED              3UL
+
+
+#define ALT_FUNC_UART         8UL
+
+//New
+
+
   /*
 #define AF_UART               0xXX
 #define UART_4                0xXX

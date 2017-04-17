@@ -11,7 +11,7 @@
 
 
 int init_GPIO_Pin(unsigned long type, unsigned long port, unsigned long no, unsigned long val);
-
+int init_UART4_Register(unsigned long type, unsigned long no, unsigned long val);
 
 //int init_UART_Pin(unsigned int uart_type, unsigned int port, unisgned int no , unistigne int val);
   /*  TODO

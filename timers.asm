@@ -30,8 +30,8 @@ MOVW	R1, #16000
 MOVW	R0, #lo_addr(TIM2_PSC+0)
 MOVT	R0, #hi_addr(TIM2_PSC+0)
 STR	R1, [R0, #0]
-;timers.c,8 :: 		TIM2_ARR     = TIME_FOR_DASH;   // Auto-reload value - ARR is the value to be loaded in the actual auto-reload register
-MOVW	R1, #500
+;timers.c,8 :: 		TIM2_ARR     = INTERRUPT_TIME;   // Auto-reload value - ARR is the value to be loaded in the actual auto-reload register
+MOVS	R1, #100
 MOVW	R0, #lo_addr(TIM2_ARR+0)
 MOVT	R0, #hi_addr(TIM2_ARR+0)
 STR	R1, [R0, #0]
@@ -60,9 +60,3 @@ LDR	LR, [SP, #0]
 ADD	SP, SP, #4
 BX	LR
 ; end of _init_Timer2
-_enter_sleep:
-;timers.c,15 :: 		void enter_sleep(){
-;timers.c,24 :: 		}
-L_end_enter_sleep:
-BX	LR
-; end of _enter_sleep

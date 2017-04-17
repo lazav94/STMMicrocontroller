@@ -21,7 +21,8 @@ extern volatile char word[50] ;
  void init_UART_pins(){
 
 
-    RCC_AHB1ENR    |=  ((1UL << 0));      // Enable clock for port A
+    RCC_AHB1ENR    |=  (1UL << UART4_TX_PORT);      // Enable clock for port A TX
+    //  RCC_AHB1ENR    |=  (1UL << UART4_RX_PORT);      // Enable clock for port A RX
     RCC_APB1ENR    |=   (1UL << 19);      // Enable UART4 Clock
     
     init_GPIO_Pin(MODER,   UART4_TX_PORT, UART4_TX_PIN, ALTERNATIVE_FUNCTION);
@@ -44,7 +45,7 @@ extern volatile char word[50] ;
     GPIOA_AFRL     |=  (8UL << 4);        // Set Alternative Function 8 (low registar)
 
 }
-
+/*
 void init_UART_pins_2(){
 
 
@@ -74,10 +75,40 @@ void init_UART_pins_2(){
     GPIOA_AFRL     |=  (8UL << 0);        // Set Alternative Function 8 (low registar)
     GPIOA_AFRL     |=  (8UL << 4);        // Set Alternative Function 8 (low registar)
 
+}    */
+
+void init_UART(){
+    init_UART_pins();
+
+    /**************************************************************
+    *    Calculating Mantisa and Div                              *
+    *    MANTISA 11:0 (15:4) FRACTION 3:0                         *
+    *    Tx/Rx baud = fck / (8*2* USARTDIV)                       *
+    *    Tx/Rx baud = 9600                                        *
+    *    fck = 16000000 (16Mhz)                                   *
+    *    USARTDIV = 104.17                                        *
+    *    DIV_Fraction = 16 * 0.17 = 2.73  -> nearest(2.73) = 3h   *
+    *    MANTISA = 104 = 68h                                      *
+    *    BRR = 683h                                               *
+    ***************************************************************/
+    UART4_BRR = 0x00000682;
+    
+    init_UART4_Register(CR1, WORD_LENGTH, WORD_8B);
+    init_UART4_Register(CR1, PARITY, PARITY_DISABLE);
+
+    init_UART4_Register(CR1, UART_RECEIVE, UART_RX_ON);
+    init_UART4_Register(CR1, UART_TRANSMIT, UART_TX_ON);
+
+    init_UART4_Register(CR1, UART_RX_INTERRUPT,UART_RX_INTERRUPT_ON);
+
+
+    NVIC_IntEnable(IVT_INT_UART4);        // TODO change this!
+
+    init_UART4_Register(CR1, UART4_ED,UART4_ENABLE);
 }
 
 
-void init_UART(){
+void init_UART_2(){
     init_UART_pins();
 
     /**************************************************************
@@ -100,7 +131,7 @@ void init_UART(){
     UART4_CR1    |= (1UL << 3);           // Transmitter enable (TE)
 
 
-    UART4_CR1    |= (1UL << 5);           // RXE interrupt enable - interrupt is generated whenever ORE=1 or RXNE=1 in the USART_SR register
+    UART4_CR1    |= (1UL << UART_RX_INTERRUPT);           // RXE interrupt enable - interrupt is generated whenever ORE=1 or RXNE=1 in the USART_SR register
 
 
     NVIC_IntEnable(IVT_INT_UART4);        // TODO change this!
@@ -114,7 +145,7 @@ void init_UART(){
 
 void SendCharInterrupt (int ch)  {
     uart_tr = ch;
-    UART4_CR1 |= (1UL << 7);              // Enable intrrupt (TXEIE)
+    UART4_CR1 |= (1UL << UART_TX_INTERRUPT);              // Enable intrrupt (TXEIE)
     Delay_ms(1);
 }
 
@@ -137,9 +168,28 @@ int charToInt(char c){
      else return -1;
 }
 
+void LED_char_translate(char c){
+     LED_1 = 1;
+     if(c == DOT) Delay_ms(ONE_SECOND_DASH);
+     else         Delay_ms(3*ONE_SECOND_DASH);
+     LED_1 = 0;
+     Delay_ms(ONE_SECOND_DASH);
+}
+
+void LED_string_translate(char *s){
+     while(*s){
+         LED_char_translate(*s);
+         s++;
+        // Delay_ms(ONE_SECOND_DOT);
+     }
+}
+
 int convert(char c){
     if(charToInt(c) == -1) strcpy(letter, "!");
-    else strcpy(letter, alpha[charToInt(c)]);
+    else{
+       strcpy(letter, alpha[charToInt(c)]);
+
+    }
 }
 
 void convertString(char *s){
@@ -179,31 +229,40 @@ void clearLetter(){
 
 
 void translate(){
-    int temp;
 
-    letter[letter_cnt + 1] = '\0';
-    temp = findLetter();
+      int temp;
+      //LCD_CLEAR_SCREEN();
+      letter[letter_cnt + 1] = '\0';
+      temp = findLetter();
 
-    LCD_PRINT_STRING(" = ");
-    if(temp != -1){
-        strcpy(letters[letters_cnt++] ,letter);
-        LCD_PRINT_CHAR(intToChar(temp));
-        SendCharInterrupt(intToChar(temp));
+      LCD_PRINT_STRING(" = ");
+      if(temp != -1){
+          strcpy(letters[letters_cnt++] ,letter);
+          LCD_PRINT_CHAR(intToChar(temp));
+          SendCharInterrupt(intToChar(temp));
 
-    } else{                            //ERROR not found this sequence of dots and dashes
-            LCD_PRINT_STRING('!');
-            SendCharInterrupt('!');
-    }
-    clearLetter();
-
+      } else{                            //ERROR not found this sequence of dots and dashes
+              LCD_PRINT_STRING('!');
+              SendCharInterrupt('!');
+      }
+      clearLetter();
 
 }
 
 void fnc(char DD){
-     LED_2 = 1;
-     LED_1 = DD == DOT ? 0 : 1;
-     LCD_PRINT_CHAR(DD);
-     letter[letter_cnt++] = DD;
-     if(letter_cnt == 5)
-         translate();
+
+     if(DD == SPACE){
+         LCD_CLEAR_SCREEN();
+         LCD_PRINT_CHAR(DD);
+         SendCharInterrupt(' ');
+         clearLetter();
+     }
+     else{
+         LCD_PRINT_CHAR(DD);
+         //LED_1 = DD == DOT ? 0 : 1;
+         letter[letter_cnt++] = DD;
+         if(letter_cnt == 5)
+             translate();
+     }
+
 }

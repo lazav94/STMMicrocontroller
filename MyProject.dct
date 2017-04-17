@@ -4794,8 +4794,6 @@ busy_bit
 busy_i2c1_sr2_bit
 busy_i2c2_sr2_bit
 button
-button_1
-button_2
 button1_interrupt
 button2_interrupt
 bypass
@@ -5317,6 +5315,7 @@ canspisetfilter
 canspisetmask
 canspisetoperationmode
 canspiwrite
+cantranslate
 canx_messagepending
 canxinitializeadvanced
 canxread
@@ -7614,6 +7613,7 @@ cgonak
 cgonak
 cgonak_bit
 cgonak_otg_hs_dctl_bit
+changedashtime
 character8x7
 chartoint
 chdis
@@ -9072,6 +9072,7 @@ configs
 configs
 configs
 configs
+confirmtime
 constant
 constant0
 constant0_bit
@@ -10017,6 +10018,7 @@ dad6_otg_hs_hcchar9_bit
 daif
 daif
 daif_bit
+dashtime
 data
 data
 data
@@ -13012,6 +13014,7 @@ dmeif7
 dmeif7_bit
 dmeif7_dma1_hisr_bit
 dosomething
+dottime
 dpid
 dpid
 dpid
@@ -13817,7 +13820,6 @@ enpec
 enpec_bit
 enpec_i2c1_cr1_bit
 enpec_i2c2_cr1_bit
-enter_sleep
 enumdne
 enumdne
 enumdne
@@ -27200,15 +27202,14 @@ init
 init_all
 init_bit
 init_buttons
-init_buttons_2
 init_gpio_pin
 init_lcd
 init_leds
-init_leds_2
 init_timer2
 init_uart
+init_uart_2
 init_uart_pins
-init_uart_pins_2
+init_uart4_register
 initf
 initf
 initf_bit
@@ -29186,7 +29187,6 @@ lcd_data_line_write
 lcd_data_write
 lcd_en
 lcd_gpio_init
-lcd_gpio_init_2
 lcd_init
 lcd_left_shift
 lcd_out
@@ -29551,7 +29551,11 @@ lecie
 lecie_bit
 lecie_can1_ier_bit
 led_1
+led_11
 led_2
+led_22
+led_char_translate
+led_string_translate
 left_to_right
 letter
 letter_cnt
@@ -42506,6 +42510,7 @@ soft_uart_write
 sound_init
 sound_play
 sp
+spacetime
 spe
 spe
 spe
@@ -48503,7 +48508,6 @@ wdu1_rtc_tsdr_bit
 wdu2
 wdu2_bit
 wdu2_rtc_tsdr_bit
-welcome
 wfe
 wfe
 wfe_bit
