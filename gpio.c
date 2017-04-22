@@ -1,25 +1,6 @@
 #include "gpio.h"
 #include "lcd.h"
- /*
-int init_ODR(sbit per, unsigned port, unsigned no){
-    switch(port){
-        case PORT_A:
-            per at PIOA_ODR.no;
-            break;
-        case PORT_B:
-            per at GPIOB_ODR.no;
-            break;
-        case PORT_C:
-            per at GPIOC_ODR.no;
-            break;
-        case PORT_D:
-            per at GPIOD_ODR.no;
-            break;
-        case PORT_E:
-            per at GPIOE_ODR.no;
-            break;
-    }
-}  */
+
 
 int init_GPIO_Pin(unsigned long type, unsigned long port, unsigned long no, unsigned long val){
     if(type != OTYPER) no <<= 1;

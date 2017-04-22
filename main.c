@@ -5,25 +5,9 @@
 #include "lcd.h"
 #include "timers.h"  
 
-
-//volatile sbit LED_22 at GPIOE_ODR.B15;
-//volatile sbit LED_11 at L_LED_GPIO_ODR;
-volatile sbit LED_11 at L_LED_GPIO_ODR;
-volatile sbit LED_22 at R_LED_GPIO_ODR;
-
-// LCD  
-/*
-volatile sbit LCD_RS at GPIOC_ODR.B4;
-volatile sbit LCD_EN at GPIOC_ODR.B13;
-
-volatile sbit LCD_D4 at GPIOC_ODR.B3;
-volatile sbit LCD_D5 at GPIOC_ODR.B2;
-volatile sbit LCD_D6 at GPIOC_ODR.B1;
-volatile sbit LCD_D7 at GPIOC_ODR.B0;
-  */
-
-
-
+// LEDs
+volatile sbit LED1 at L_LED_GPIO_ODR;
+volatile sbit LED2 at R_LED_GPIO_ODR;
 
 // LCD
 volatile sbit LCD_RS at LCD_RS_CONF;
@@ -33,9 +17,6 @@ volatile sbit LCD_D4 at LCD_D4_CONF;
 volatile sbit LCD_D5 at LCD_D5_CONF;
 volatile sbit LCD_D6 at LCD_D6_CONF;
 volatile sbit LCD_D7 at LCD_D7_CONF;
-
-
-
 
 // Global variables
 volatile char letter[6] ;
@@ -65,14 +46,14 @@ volatile unsigned spaceTime = 7 * HALF_SECOND_DOT;
 
 
 // Not used (just for testing)
-/*void sleep_init(){
+/*
+void sleep_init(){
      SCB_SCR &= ~(1U << 2); // sleep
-     SCB_SCR |= (1U << 4);   //Enabled events and all interrupts, including disabled interrupts, can wakeup the processor.
+     SCB_SCR |= (1U << 4);  //Enabled events and all interrupts, including disabled interrupts, can wakeup the processor.
 
-     // asm{ WFI; }  // wait for interrupt   .
-}   */
-
-
+     asm  WFI;         // wait for interrupt   .
+}   
+*/
 
  void init_all(){
  /*
@@ -104,8 +85,7 @@ void main(){
 
     init_all();                           // Initalize LCD, LEDs, Buttons, UART, Timer...
     Delay_ms(10);                         // Delay for stabilization initialization
-
-    doSomething();                      // Infinity loop (dummy loop)
+    doSomething();                        // Infinite loop (dummy loop)
 
 }
 
@@ -134,7 +114,7 @@ void ChangeDashTime(){
                 LCD_PRINT_CHAR('4');
                 break;
         }
-        spaceTime = 7*dotTime;
+        spaceTime = 9*dotTime;  // 7x is in theory , but for testing we set on 9
         LCD_CURSOR(0,0);
 }
 
@@ -144,13 +124,13 @@ void ChangeDashTime(){
 void Button1_Interrupt() iv IVT_INT_EXTI0 {
 
      if( EXTI_FTSR & (1UL << LEFT_BUTTON_PIN)){         // is Button PE0 pressed
-         LED_11 = 1;
+         LED1 = 1;
          riseTimeB1 = currentTime;
          EXTI_FTSR &= ~(1UL << LEFT_BUTTON_PIN);
          EXTI_RTSR |=   1UL << LEFT_BUTTON_PIN;
      }
      else if ( EXTI_RTSR & (1UL << LEFT_BUTTON_PIN)){    // is Button PE0 realesed
-         LED_11 = 0;
+         LED1 = 0;
          if(letter_cnt == 0) LCD_CLEAR_SCREEN();
          fallTimeB1 = currentTime;
          EXTI_RTSR &= ~(1UL << LEFT_BUTTON_PIN);
@@ -184,7 +164,7 @@ void Button2_Interrupt() iv IVT_INT_EXTI15_10 {
             ChangeDashTime();
          }else {                               // DASH
              LCD_CLEAR_SCREEN();
-             LED_11 = LED_22 = 0;
+             LED1 = LED2 = 0;
              
          }
 
@@ -206,15 +186,14 @@ void UART_Interrupt() iv IVT_INT_UART4  {
          LCD_PRINT_STRING(letter);
          LED_string_translate(letter);
 
-         EXTI_PR = (1UL << UART4_RX_PIN);
-         EXTI_IMR |= (1UL << UART4_RX_PIN);
-
+         EXTI_PR  |= 1UL << UART4_RX_PIN;
+         EXTI_IMR |= 1UL << UART4_RX_PIN;
     }
     else if( UART4_SR & 0x80){
         UART4_CR1 &= ~(1UL << UART_TX_INTERRUPT);         // disable TXEIE bit
         UART4_DR = (uart_tr & 0x01FF);
-        EXTI_PR = (1UL << UART4_TX_PIN);
-        EXTI_IMR |= (1UL << UART4_TX_PIN);
+        EXTI_PR  |= 1UL << UART4_TX_PIN;
+        EXTI_IMR |= 1UL << UART4_TX_PIN;
     }
     UART4_CR1 |= (1UL << 13);             // Enable UART  (when we write UART4_DR , we reset this bit , so we must enable uart again!!!!!!
 
@@ -224,9 +203,8 @@ void UART_Interrupt() iv IVT_INT_UART4  {
 void Timer2_Interrupt() iv IVT_INT_TIM2 {
 
     if(TIM2_SR){
+        TIM2_SR = 0x00; // mask
         currentTime++;
-        TIM2_SR = 0x00;
-        
 
        if(canTranslate == 1)
             confirmTime++;
@@ -234,14 +212,12 @@ void Timer2_Interrupt() iv IVT_INT_TIM2 {
             spaceTime--;
             
         if(confirmTime == CONFIRM_TIME){
-
             translate();
             confirmTime = canTranslate = 0;
             spaceTime = SPACE_TIME;
         } 
         if(spaceTime == 0)
             fnc(SPACE);
-
     }
     
 }

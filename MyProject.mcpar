@@ -6,7 +6,7 @@ Value=0
 [BUILD_TYPE]
 Value=0
 [ACTIVE_TAB]
-Value=config.h
+Value=gpio.h
 [USE_EEPROM]
 Value=0
 [USE_HEAP]
@@ -32,10 +32,10 @@ ActiveImageIndex=-1
 [OPENED_FILES]
 Count=5
 File0=main.c
-File1=config.h
-File2=definitions.h
-File3=uart.c
-File4=uart.h
+File1=uart.c
+File2=uart.h
+File3=gpio.c
+File4=gpio.h
 [EEPROM]
 Count=0
 [ACTIVE_COMMENTS_FILES]
